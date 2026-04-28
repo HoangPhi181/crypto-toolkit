@@ -19,3 +19,20 @@ export function hashMD5(input) {
     };
   } catch(e) { return { error: 'Lỗi MD5: ' + e.message }; }
 }
+
+
+// ── SHA-256 ─────────────────────────────────────────────────────
+export function hashSHA256(input) {
+  if (input === undefined || input === null)
+    return { error: 'SHA-256: Input không hợp lệ.' };
+  try {
+    const hash = CryptoJS.SHA256(input).toString();
+    return {
+      hash,
+      hexLen : hash.length,         // luôn là 64
+      bits   : 256,
+      algo   : 'SHA-256'
+    };
+  } catch(e) { return { error: 'Lỗi SHA-256: ' + e.message }; }
+}
+
