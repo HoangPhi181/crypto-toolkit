@@ -58,3 +58,7 @@ export function compareHashes(inputA, inputB) {
   };
 }
 
+// ── HELPER: kích thước input bằng bytes ─────────────────────────
+export function getByteSize(str) {
+  return new TextEncoder().encode(str).length;
+}
