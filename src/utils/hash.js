@@ -36,3 +36,25 @@ export function hashSHA256(input) {
   } catch(e) { return { error: 'Lỗi SHA-256: ' + e.message }; }
 }
 
+// ── SO SÁNH HASH (Kiểm tra toàn vẹn dữ liệu) ───────────────────
+export function compareHashes(inputA, inputB) {
+  const hashA = CryptoJS.SHA256(inputA).toString();
+  const hashB = CryptoJS.SHA256(inputB).toString();
+
+  // Đếm số bit khác nhau (Hamming distance) → minh họa Avalanche
+  let diffBits = 0;
+  for (let i = 0; i < hashA.length; i++) {
+    let xor = parseInt(hashA[i], 16) ^ parseInt(hashB[i], 16);
+    while (xor) { diffBits += xor & 1; xor >>= 1; }
+  }
+
+  return {
+    hashA,
+    hashB,
+    match       : hashA === hashB,
+    diffBits,
+    totalBits   : 256,
+    diffPercent : ((diffBits / 256) * 100).toFixed(1)
+  };
+}
+
