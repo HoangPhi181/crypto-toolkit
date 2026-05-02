@@ -29,3 +29,34 @@ export function generateRSAKeyPair(bits = 2048) {
         return { error: 'Tạo khóa RSA thất bại: ' + e.message };
     }
 }
+
+/**
+ * Mã hóa bằng Public Key
+ */
+export function rsaEncrypt(plaintext, publicKeyPEM) {
+    if (!plaintext) return { error: 'RSA: Plaintext không được để trống.' };
+    if (!publicKeyPEM) return { error: 'RSA: Cần nhập Public Key (PEM format).' };
+
+    // Kiểm tra sơ bộ PEM format
+    if (!publicKeyPEM.includes('-----BEGIN'))
+        return { error: 'RSA: Public Key không đúng định dạng PEM.\nCần có dòng -----BEGIN PUBLIC KEY-----' };
+
+    // Cảnh báo plaintext quá dài (RSA-2048 limit ~245 bytes với PKCS#1 v1.5)
+    const byteLen = new TextEncoder().encode(plaintext).length;
+    if (byteLen > 200)
+        return {
+            error: `RSA: Plaintext quá dài (${byteLen} bytes).\n` +
+                'RSA-2048 chỉ mã hóa tối đa ~200 bytes.\n' +
+                'Gợi ý: Dùng AES để mã hóa dữ liệu lớn.'
+        };
+
+    try {
+        const crypt = new JSEncrypt();
+        crypt.setPublicKey(publicKeyPEM);
+        const enc = crypt.encrypt(plaintext);
+        if (!enc) throw new Error('encrypt() trả về false — Public Key không hợp lệ?');
+        return { ciphertext: enc };  // Base64
+    } catch (e) {
+        return { error: 'RSA Encrypt thất bại: ' + e.message };
+    }
+}
