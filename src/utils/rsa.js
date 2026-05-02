@@ -60,3 +60,24 @@ export function rsaEncrypt(plaintext, publicKeyPEM) {
         return { error: 'RSA Encrypt thất bại: ' + e.message };
     }
 }
+
+/**
+ * Giải mã bằng Private Key
+ */
+export function rsaDecrypt(ciphertext, privateKeyPEM) {
+    if (!ciphertext) return { error: 'RSA: Ciphertext không được để trống.' };
+    if (!privateKeyPEM) return { error: 'RSA: Cần nhập Private Key (PEM format).' };
+
+    if (!privateKeyPEM.includes('-----BEGIN'))
+        return { error: 'RSA: Private Key không đúng định dạng PEM.' };
+
+    try {
+        const crypt = new JSEncrypt();
+        crypt.setPrivateKey(privateKeyPEM);
+        const dec = crypt.decrypt(ciphertext);
+        if (!dec) throw new Error('decrypt() trả về null — sai Private Key hoặc ciphertext bị hỏng.');
+        return { plaintext: dec };
+    } catch (e) {
+        return { error: 'RSA Decrypt thất bại: ' + e.message };
+    }
+}
