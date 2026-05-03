@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js';
+
 /**
  * AES Encrypt
  * @param {string} plaintext - Văn bản cần mã hóa
