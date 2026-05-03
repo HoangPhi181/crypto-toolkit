@@ -6,7 +6,7 @@
  * @param {string} ivHex - IV dạng hex (chỉ dùng cho CBC, để trống = tự tạo)
  * @returns {{ ciphertext: string, iv: string, error: string }}
  */
-function aesEncrypt(plaintext, key, mode = 'CBC', ivHex = '') {
+export function aesEncrypt(plaintext, key, mode = 'CBC', ivHex = '') {
   // === VALIDATE ===
   const validKeySizes = [16, 24, 32];
   if (!validKeySizes.includes(key.length)) {
@@ -47,7 +47,7 @@ function aesEncrypt(plaintext, key, mode = 'CBC', ivHex = '') {
 /**
  * AES Decrypt
  */
-function aesDecrypt(ciphertext, key, mode = 'CBC', ivHex = '') {
+export function aesDecrypt(ciphertext, key, mode = 'CBC', ivHex = '') {
   const validKeySizes = [16, 24, 32];
   if (!validKeySizes.includes(key.length)) {
     return { error: `Lỗi AES: Khóa phải là 16, 24, hoặc 32 ký tự. Hiện tại: ${key.length}` };
@@ -77,7 +77,7 @@ function aesDecrypt(ciphertext, key, mode = 'CBC', ivHex = '') {
 }
 
 // Tạo khóa AES ngẫu nhiên
-function generateAESKey(bits = 256) {
+export function generateAESKey(bits = 256) {
   const bytes = bits / 8;
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from({length: bytes}, () =>
